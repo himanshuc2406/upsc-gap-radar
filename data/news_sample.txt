@@ -1,0 +1,5 @@
+RBI expands pilot of Central Bank Digital Currency (e-Rupee) to more cities and banks
+
+The Reserve Bank of India (RBI) announced an expansion of its retail Central Bank Digital Currency (CBDC) pilot, known as the e-Rupee. More banks and additional cities have been added to the programme, allowing a larger number of users and merchants to make digital rupee transactions through mobile wallets.
+
+The RBI said the digital rupee is a sovereign currency issued by the central bank in digital form and is exchangeable one-to-one with physical cash. The pilot is being used to study the impact of CBDC on the banking system, monetary policy, and the wider digital payments ecosystem. Officials noted that offline functionality and programmability features are being tested to improve financial inclusion in areas with poor internet connectivity.

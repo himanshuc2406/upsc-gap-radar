@@ -1,0 +1,23 @@
+# UPSC GS Prelims/Mains — topic list (simplified seed for POC)
+# Each line = one syllabus topic the news can be mapped to.
+
+GS3 Economy - Banking, RBI, monetary policy, CBDC, digital payments
+GS3 Economy - Money, inflation, CPI, WPI, fiscal deficit
+GS3 Economy - NPA, banking sector reforms, insolvency
+GS3 Economy - Trade, foreign exchange reserves, balance of payments
+GS3 Economy - GST, taxation, fiscal federalism
+GS2 Polity - Constitution, fundamental rights and duties
+GS2 Polity - Parliament, committees, legislative process
+GS2 Polity - Judiciary, Supreme Court, judicial review
+GS3 Environment - Climate change, IPCC, global warming
+GS3 Environment - Biodiversity, conservation, protocols
+GS3 Environment - Pollution, air quality, NCAP
+GS1 Geography - Physical geography, cyclones, monsoon
+GS1 Geography - Economic geography, agriculture, crops
+GS1 History - Modern India, freedom struggle
+GS1 History - Ancient and medieval India, art and architecture
+GS3 Science and Technology - Space, ISRO, private space sector
+GS3 Science and Technology - Biotechnology, vaccines, health
+GS3 Science and Technology - Digital tech, blockchain, AI
+GS2 International Relations - Global organizations, WTO, UN
+GS2 International Relations - Groupings, Quad, BRICS, bilateral ties

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UPSC Gap Radar</title>
+  <style>
+    :root {
+      --bg: #000000; --card: #0d0d0d; --card2: #161616;
+      --line: #2a2a2a; --text: #ffffff; --muted: #b9b9b9;
+      --accent: #4cc2ff; --good: #4ad66d; --warn: #e3b341;
+      --pib: #2ea043; --hindu: #3b82f6; --ie: #e0763a;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.5; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 16px 14px 40px; }
+
+    header { display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; margin-bottom: 4px; }
+    h1 { font-size: 1.3rem; margin: 0; }
+    .sub { color: var(--muted); font-size: .82rem; margin: 2px 0 16px; }
+    .iconbtn { background: var(--card2); color: var(--text); border: 1px solid var(--line);
+      border-radius: 9px; padding: 8px 12px; font-size: .85rem; cursor: pointer; }
+    .iconbtn:active { transform: scale(.97); }
+
+    /* news list */
+    .newscard { background: var(--card); border: 1px solid var(--line);
+      border-radius: 12px; padding: 13px 14px; margin-bottom: 10px; cursor: pointer;
+      transition: border-color .15s, transform .1s; }
+    .newscard:hover { border-color: var(--accent); }
+    .newscard:active { transform: scale(.995); }
+    .badge { display: inline-block; font-size: .68rem; font-weight: 700;
+      letter-spacing: .04em; padding: 2px 8px; border-radius: 6px; color: #06121f; }
+    .b-pib { background: var(--pib); } .b-hindu { background: var(--hindu); }
+    .b-ie { background: var(--ie); } .b-other { background: var(--muted); }
+    .newscard .title { font-size: .98rem; font-weight: 600; margin: 7px 0 3px; }
+    .newscard .snip { color: var(--muted); font-size: .82rem;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* detail */
+    .back { background: none; border: none; color: var(--accent);
+      font-size: .9rem; cursor: pointer; padding: 6px 0; margin-bottom: 6px; }
+    .card { background: var(--card); border: 1px solid var(--line);
+      border-radius: 12px; padding: 14px 16px; margin-top: 12px; }
+    .label { color: var(--accent); font-size: .7rem; letter-spacing: .09em;
+      text-transform: uppercase; margin-bottom: 7px; }
+    .topic { font-size: 1.05rem; font-weight: 600; }
+    .score { color: var(--muted); font-size: .76rem; }
+    .pyq { padding: 9px 0; border-bottom: 1px solid var(--line); }
+    .pyq:last-child { border-bottom: none; }
+    .pyq .meta { color: var(--good); font-size: .8rem; font-weight: 600; }
+    .pyq .q { font-size: .88rem; }
+    .quiz { white-space: pre-wrap; font-size: .92rem; }
+    .pts { margin: 8px 0 0; padding-left: 18px; }
+    .pts li { font-size: .88rem; margin-bottom: 4px; }
+    .org { padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .org:last-child { border-bottom: none; }
+    .orgname { font-weight: 700; color: var(--accent); display: block; font-size: .92rem; }
+    .orginfo { color: var(--muted); font-size: .84rem; }
+    .qtext { font-weight: 600; margin-bottom: 8px; }
+    .opt { padding: 8px 10px; margin: 5px 0; background: var(--card2);
+      border: 1px solid var(--line); border-radius: 8px; font-size: .9rem; }
+    .reveal { margin-top: 8px; background: var(--card2); color: var(--accent);
+      border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px;
+      font-size: .85rem; cursor: pointer; }
+    .ans { margin-top: 10px; padding: 10px; background: var(--card2);
+      border-left: 3px solid var(--good); border-radius: 6px; font-size: .88rem; }
+    .muted { color: var(--muted); font-size: .85rem; }
+    .newsbody { margin-top: 10px; font-size: .92rem; color: var(--text); white-space: pre-wrap; }
+    .readmore { display: inline-block; margin-top: 12px; color: var(--accent);
+      font-size: .85rem; text-decoration: none; }
+    .credit { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line);
+      color: var(--muted); font-size: .8rem; }
+    .credit a { color: var(--accent); text-decoration: none; }
+    .actions { display: flex; gap: 10px; margin-top: 12px; }
+    .actbtn { flex: 1; padding: 12px; background: var(--card2); color: var(--text);
+      border: 1px solid var(--line); border-radius: 10px; font-size: .9rem;
+      font-weight: 600; cursor: pointer; }
+    .actbtn:active { transform: scale(.98); }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.7);
+      display: flex; align-items: flex-end; justify-content: center; z-index: 50; }
+    .modalcard { background: var(--card); border: 1px solid var(--line);
+      border-radius: 16px 16px 0 0; width: 100%; max-width: 760px; max-height: 85vh;
+      overflow-y: auto; padding: 20px 18px 28px; position: relative;
+      animation: up .2s ease; }
+    @keyframes up { from { transform: translateY(30px); opacity: .6; } }
+    @media (min-width: 600px) { .modal { align-items: center; }
+      .modalcard { border-radius: 16px; } }
+    .modalclose { position: absolute; top: 12px; right: 14px; background: none;
+      border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
+    .err { color: #ff7b72; }
+    .spin { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--line);
+      border-top-color: var(--accent); border-radius: 50%; animation: r .7s linear infinite;
+      vertical-align: -2px; margin-right: 7px; }
+    @keyframes r { to { transform: rotate(360deg); } }
+    .hidden { display: none; }
+
+    details { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 12px; }
+    summary { color: var(--muted); font-size: .85rem; cursor: pointer; }
+    textarea { width: 100%; min-height: 90px; margin-top: 8px; padding: 10px;
+      background: var(--card); color: var(--text); border: 1px solid var(--line);
+      border-radius: 9px; font-size: .9rem; resize: vertical; }
+    .gobtn { margin-top: 8px; width: 100%; padding: 11px; background: var(--accent);
+      color: #04263a; border: none; border-radius: 9px; font-weight: 700; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>📡 UPSC Gap Radar</h1>
+        <div class="sub" id="sub">Public POC · news → topic + synthetic demo references + quiz</div>
+      </div>
+      <button class="iconbtn" id="refresh" onclick="loadNews(true)">↻ Refresh</button>
+    </header>
+
+    <!-- LIST VIEW -->
+    <div id="listView">
+      <div id="newsList"><div class="muted"><span class="spin"></span>News laa raha hun...</div></div>
+
+      <details>
+        <summary>✍️ Apni koi news khud daalni hai? (optional)</summary>
+        <textarea id="manualNews" placeholder="News ka text yahan paste karo..."></textarea>
+        <button class="gobtn" onclick="analyzeManual()">Analyse karo</button>
+      </details>
+    </div>
+
+    <!-- DETAIL VIEW -->
+    <div id="detailView" class="hidden">
+      <button class="back" onclick="showList()">← Wapas news list</button>
+      <div class="card">
+        <div class="label" id="dSource">News</div>
+        <div class="topic" id="dTitle"></div>
+        <div class="newsbody" id="dBody"></div>
+        <div class="credit" id="dCredit"></div>
+      </div>
+      <div class="actions">
+        <button class="actbtn" onclick="showSummary()">🧠 AI Summary</button>
+        <button class="actbtn" onclick="showExam()">🎯 Exam Analysis</button>
+      </div>
+      <div id="analysis"></div>
+    </div>
+  </div>
+
+  <!-- POPUP MODAL (AI Summary) -->
+  <div id="modal" class="modal hidden" onclick="closeModal(event)">
+    <div class="modalcard" onclick="event.stopPropagation()">
+      <button class="modalclose" onclick="closeModal()">✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    const badgeClass = s => ({'PIB':'b-pib','The Hindu':'b-hindu','Indian Express':'b-ie'}[s] || 'b-other');
+
+    async function loadNews(force) {
+      const box = $('newsList');
+      box.innerHTML = '<div class="muted"><span class="spin"></span>News laa raha hun...</div>';
+      try {
+        const r = await fetch('/news' + (force ? '?refresh=1' : ''));
+        const d = await r.json();
+        if (!d.items || !d.items.length) { box.innerHTML = '<div class="muted">Koi news nahi mili. Refresh try karo.</div>'; return; }
+        $('sub').textContent = d.count + ' aaj ki headlines · tap karke analyse karo';
+        box.innerHTML = d.items.map((it, i) => `
+          <div class="newscard" onclick='openNews(${i})'>
+            <span class="badge ${badgeClass(it.source)}">${esc(it.source)}</span>
+            <div class="title">${esc(it.title)}</div>
+            <div class="snip">${esc(it.summary || '')}</div>
+          </div>`).join('');
+        window._news = d.items;
+      } catch (e) {
+        box.innerHTML = `<div class="err">News fetch error: ${e}</div>`;
+      }
+    }
+
+    function showList() { $('detailView').classList.add('hidden'); $('listView').classList.remove('hidden'); }
+    function showDetail() { $('listView').classList.add('hidden'); $('detailView').classList.remove('hidden'); window.scrollTo(0,0); }
+
+    let _cur = null;   // abhi khuli news + uska cached analysis
+
+    function openNews(i) {
+      const it = window._news[i];
+      _cur = { news: it.title + '\n\n' + (it.summary || ''), data: null };
+      $('dSource').innerHTML = `<span class="badge ${badgeClass(it.source)}">${esc(it.source)}</span>`;
+      $('dTitle').textContent = it.title;
+      $('dBody').innerHTML = (it.summary ? esc(it.summary) : '') +
+        '<div class="muted" style="margin-top:8px"><span class="spin"></span>Poori news laa raha hun...</div>';
+      // source credit (end me)
+      $('dCredit').innerHTML = `Source: <b>${esc(it.source)}</b>` +
+        (it.link ? ` · <a href="${esc(it.link)}" target="_blank" rel="noopener">original ↗</a>` : '');
+      $('analysis').innerHTML = '';
+      showDetail();
+      if (it.link) loadArticle(it);
+      else $('dBody').textContent = it.summary || '';
+    }
+
+    // Poora article fetch karke app ke andar dikhao (Hindu/IE chalega; PIB pe snippet rahega)
+    async function loadArticle(it) {
+      try {
+        const r = await fetch('/article', { method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: it.link }) });
+        const d = await r.json();
+        if (d.ok && d.text) {
+          $('dBody').textContent = d.text;
+          _cur.news = it.title + '\n\n' + d.text;   // AI ko bhi poora text milega
+        } else {
+          $('dBody').innerHTML = (it.summary ? esc(it.summary) : '') +
+            '<div class="muted" style="margin-top:8px">(Poora text yahan nahi aa paaya — upar Source link se padho.)</div>';
+        }
+      } catch (e) {
+        $('dBody').textContent = it.summary || '(Article load nahi hua.)';
+      }
+    }
+
+    function analyzeManual() {
+      const t = $('manualNews').value.trim();
+      if (!t) return;
+      _cur = { news: t, data: null };
+      $('dSource').textContent = 'Aapki news';
+      $('dTitle').textContent = t.slice(0, 90) + (t.length > 90 ? '…' : '');
+      $('dBody').textContent = t;
+      $('dCredit').innerHTML = '';
+      $('analysis').innerHTML = '';
+      showDetail();
+    }
+
+    // API sirf EK baar call ho, phir cache (paisa + speed dono bachte hain)
+    async function ensureData() {
+      if (_cur.data) return _cur.data;
+      const r = await fetch('/analyze', { method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ news: _cur.news }) });
+      _cur.data = await r.json();
+      return _cur.data;
+    }
+
+    // 🧠 AI Summary — button dabane pe popup card me
+    async function showSummary() {
+      openModal('<div class="muted"><span class="spin"></span>AI Summary bana raha hun...</div>');
+      try {
+        const d = await ensureData();
+        const ai = d.ai;
+        let html = '<div class="label">🧠 AI Summary</div>';
+        if (ai && ai.summary) {
+          const pts = (ai.key_points || []).map(p => `<li>${esc(p)}</li>`).join('');
+          html += `<div>${esc(ai.summary)}</div>${pts ? `<ul class="pts">${pts}</ul>` : ''}`;
+          if (ai.organisations && ai.organisations.length) {
+            html += '<div class="label" style="margin-top:16px">🏛️ Related Organisations</div>';
+            html += ai.organisations.map(o => `<div class="org"><span class="orgname">${esc(o.name)}</span><span class="orginfo">${esc(o.info || '')}</span></div>`).join('');
+          }
+          if (ai.static_background)
+            html += `<div class="label" style="margin-top:16px">📚 Static Linkage</div><div>${esc(ai.static_background)}</div>`;
+        } else {
+          html += `<div class="err">${esc(d.error || 'AI summary nahi bani.')}</div>${d.raw ? `<div class="quiz">${esc(d.raw)}</div>` : ''}`;
+        }
+        html += `<div class="muted" style="margin-top:14px">via ${esc(d.provider)}</div>`;
+        $('modalContent').innerHTML = html;
+      } catch (e) { $('modalContent').innerHTML = `<div class="err">Error: ${e}</div>`; }
+    }
+
+    // 🎯 Exam Analysis — topic + PYQ + MCQ + Mains, inline
+    async function showExam() {
+      const out = $('analysis');
+      out.innerHTML = '<div class="card muted"><span class="spin"></span>Topic, PYQ aur quiz bana raha hun...</div>';
+      try {
+        out.innerHTML = renderExam(await ensureData());
+      } catch (e) { out.innerHTML = `<div class="card err">Error: ${e}</div>`; }
+    }
+
+    function renderExam(d) {
+      let html = '';
+      const low = d.topic_score < 0.12;
+      html += `<div class="card"><div class="label">🎯 Mapped Syllabus Topic</div>
+        <div class="topic">${esc(d.topic)}</div>
+        <div class="score">match score: ${d.topic_score}${low ? ' · (weak link — confirm karo)' : ''}</div></div>`;
+      const pyqHtml = d.pyqs.map(p => `
+        <div class="pyq"><div class="meta">${p.year ? '['+p.year+']' : '[DEMO]'} ${esc(p.topic)} · match ${p.similarity}</div>
+        <div class="q">${esc(p.question)}</div></div>`).join('');
+      html += `<div class="card"><div class="label">📜 Retrieved references — demo rows are not actual PYQs</div>${pyqHtml}</div>`;
+      const ai = d.ai;
+      if (ai && ai.prelims_mcq && ai.prelims_mcq.question) {
+        const m = ai.prelims_mcq;
+        const opts = (m.options || []).map(o => `<div class="opt">${esc(o)}</div>`).join('');
+        html += `<div class="card"><div class="label">❓ Prelims MCQ</div>
+          <div class="qtext">${esc(m.question)}</div><div class="opts">${opts}</div>
+          <button class="reveal" onclick="this.nextElementSibling.classList.toggle('hidden')">Answer dikhao</button>
+          <div class="ans hidden"><b>${esc(m.answer || '')}</b><br>${esc(m.explanation || '')}</div></div>`;
+      }
+      if (ai && ai.mains_question)
+        html += `<div class="card"><div class="label">🖊️ Mains Question</div><div>${esc(ai.mains_question)}</div></div>`;
+      if (!ai)
+        html += `<div class="card err">${esc(d.error || '')}${d.raw ? `<div class="quiz" style="margin-top:8px">${esc(d.raw)}</div>` : ''}</div>`;
+      html += `<div class="muted" style="margin-top:10px">via ${esc(d.provider)}</div>`;
+      return html;
+    }
+
+    function openModal(html) { $('modalContent').innerHTML = html; $('modal').classList.remove('hidden'); }
+    function closeModal(e) { if (e && e.target !== $('modal')) return; $('modal').classList.add('hidden'); }
+
+    loadNews(false);
+  </script>
+</body>
+</html>
